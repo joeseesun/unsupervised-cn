@@ -1,0 +1,165 @@
+/* =========================================================
+   Training Data · 私人银行年报
+   奶油纸面 + 森林绿 + 黄铜金；Cormorant Garamond 大号数字与标题、思源宋体正文；
+   金色细线双框、罗马式期号、慢节奏的大留白，像一份写给长期投资人的年度报告。
+   ========================================================= */
+:root, :root[data-theme='light'] {
+  --bg: #f4efe4; --bg2: #f4efe4; --card: #faf7f0; --card-hover: #fdfbf6;
+  --line: #e2d9c6; --line-strong: #c9b998; --rule: #12301f;
+  --text: #12301f; --text-soft: #2c3d31; --text-faint: #a89e86; --muted: #6f6a58;
+  --accent: #12301f; --accent-hover: #1d4430; --on-accent: #f4efe4; --brand: #9a7840; --on-brand: #f4efe4;
+  --gold: #b08d57;
+  --zh-soft: rgba(176,141,87,.12); --bar-bg: #e4dcc9; --bar-buf: #d4c8ad;
+  --bg-glass: rgba(244,239,228,.9); --bg-glass2: rgba(250,247,240,.96); --trans-bg: rgba(18,48,31,.035);
+  --thumb-bg: #e6dfcd; --mark-bg: rgba(176,141,87,.28);
+  --shadow: 0 16px 44px rgba(18,48,31,.14), 0 2px 6px rgba(18,48,31,.06); --focus: #12301f;
+  --f-bg: #12301f; --f-text: #f4efe4; --f-soft: #c8c3ad; --f-faint: #8e9580; --f-line: rgba(197,164,103,.3);
+  color-scheme: light;
+}
+:root[data-theme='sepia'] {
+  --bg: #efe5cf; --bg2: #efe5cf; --card: #f6eedc; --card-hover: #f9f3e5;
+  --line: #ddcfae; --line-strong: #c4b089; --rule: #2a2a14;
+  --text: #2a2a14; --text-soft: #403d24; --text-faint: #a3967a; --muted: #756c52;
+  --accent: #2a2a14; --accent-hover: #403d24; --on-accent: #efe5cf; --brand: #93702f; --on-brand: #efe5cf;
+  --gold: #a8833f;
+  --zh-soft: rgba(168,131,63,.12); --bar-bg: #e0d3b5; --bar-buf: #d0c09c;
+  --bg-glass: rgba(239,229,207,.9); --bg-glass2: rgba(246,238,220,.96); --trans-bg: rgba(60,50,10,.04);
+  --thumb-bg: #e3d6b8; --mark-bg: rgba(168,131,63,.28);
+  --shadow: 0 14px 40px rgba(60,40,10,.14); --focus: #2a2a14;
+  --f-bg: #2a2a14; --f-text: #efe5cf; --f-soft: #cdc2a2; --f-faint: #958a6c; --f-line: rgba(168,131,63,.3);
+  color-scheme: light;
+}
+:root[data-theme='dark'] {
+  --bg: #0f1a14; --bg2: #0f1a14; --card: #15231b; --card-hover: #1a2b21;
+  --line: #24382b; --line-strong: #3a5243; --rule: #d9c08f;
+  --text: #ece6d6; --text-soft: #cfc9b6; --text-faint: #66705f; --muted: #9a9d86;
+  --accent: #d9c08f; --accent-hover: #e8d4ab; --on-accent: #0f1a14; --brand: #d9c08f; --on-brand: #0f1a14;
+  --gold: #d9c08f;
+  --zh-soft: rgba(217,192,143,.08); --bar-bg: #24382b; --bar-buf: #314a3a;
+  --bg-glass: rgba(15,26,20,.88); --bg-glass2: rgba(21,35,27,.95); --trans-bg: rgba(217,192,143,.04);
+  --thumb-bg: #182820; --mark-bg: rgba(217,192,143,.22);
+  --shadow: 0 14px 40px rgba(0,0,0,.55); --focus: #d9c08f;
+  --f-bg: #0a120d; --f-text: #ece6d6; --f-soft: #a8a993; --f-faint: #66705f; --f-line: rgba(217,192,143,.2);
+  color-scheme: dark;
+}
+:root {
+  --font-display: "Cormorant Garamond", "Noto Serif SC", "Songti SC", Georgia, serif;
+  --font-label: "Cormorant Garamond", "Noto Serif SC", Georgia, serif;
+  --radius-card: 0px; --radius-img: 0px;
+}
+.ep-kicker, .hero-kicker, .card-kicker, .mast-date, .pop-k, .toc-h, .pn-k, .ap-label { font-size: 13px; letter-spacing: .22em; text-transform: uppercase; font-weight: 600; }
+.pop-k, .toc-h { font-family: var(--font-sans); font-size: 11.5px; letter-spacing: .14em; font-weight: 500; }
+
+/* 报头：双金线框里的居中题名，像年报封面 */
+.masthead { text-align: center; padding: 22px 0 0; }
+.masthead > .wrap { border: 1px solid var(--gold); outline: 1px solid var(--gold); outline-offset: 5px; padding: 0 40px; margin-top: 6px; }
+.mast-top { border-bottom: 1px solid var(--line); }
+.mast-brand { padding: 54px 0 30px; }
+.mast-kicker { color: var(--gold); font-family: var(--font-display); font-size: 14px; letter-spacing: .38em; font-weight: 600; text-transform: uppercase; }
+.mast-title { font-weight: 600; letter-spacing: .005em; font-size: clamp(48px, 8vw, 116px); }
+.mast-title a::after { content: ''; display: block; width: 120px; height: 1px; background: var(--gold); margin: 22px auto 0; }
+.mast-tagline { margin: 22px auto 0; font-family: var(--font-serif); font-size: 18px; color: var(--muted); }
+.mast-facts { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.mast-facts div { align-items: center; padding: 22px 0; }
+.mast-facts div + div { border-left: 1px solid var(--line); }
+.mast-facts b { font-weight: 500; font-size: 46px; color: var(--text); font-variant-numeric: oldstyle-nums proportional-nums; }
+.mast-facts span { letter-spacing: .2em; }
+.mast-intro { margin: 0 auto; padding: 26px 0 34px; font-family: var(--font-serif); font-size: 15px; color: var(--text-soft); max-width: 42em; }
+.mast-hosts { color: var(--gold); font-family: var(--font-display); font-size: 16px; font-style: italic; letter-spacing: .02em; }
+
+.toolbar { margin-top: 28px; border-top: 1px solid var(--line); }
+.filters button { letter-spacing: .06em; }
+.filters button.on { border-bottom-color: var(--gold); }
+
+/* 头条：右图左文，图片墨绿双色调 + 金框 */
+.hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); padding: 60px 0; }
+.hero-media { order: 2; outline: 1px solid var(--gold); outline-offset: 10px; }
+.hero-media img { filter: sepia(.35) grayscale(.6) contrast(1.05); }
+.hero:hover .hero-media img { filter: none; }
+.hero-kicker { color: var(--gold); }
+.hero-title { font-family: var(--font-serif); font-weight: 900; }
+.hero-en { font-size: 18px; }
+.hero-desc { font-family: var(--font-serif); }
+.hero-cta { border-bottom-color: var(--gold); letter-spacing: .2em; font-family: var(--font-display); font-size: 14px; text-transform: uppercase; }
+
+.result-line { border-bottom: 1px solid var(--gold); justify-content: center; text-align: center; }
+.result-line h2 { font-weight: 600; font-size: 30px; letter-spacing: .04em; }
+.result-line h2 small { display: block; margin: 6px 0 0; font-family: var(--font-display); font-size: 13px; letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.sec-h { border-bottom-color: var(--gold); }
+.sec-h h2 { font-weight: 600; font-size: 24px; }
+
+/* 列表：三栏卡片，超大旧式数字期号压在图上，金线分隔 */
+.grid { gap: 56px 40px; padding-top: 36px; }
+.card { position: relative; }
+.card .thumb { outline: 1px solid var(--line); outline-offset: 6px; }
+.card .thumb img { filter: sepia(.3) grayscale(.55) contrast(1.05); }
+.card:hover .thumb img { filter: none; }
+.card .thumb + .card-body { padding-top: 22px; }
+.card-kicker { justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+.card-kicker .ep-n { font-size: 34px; font-weight: 500; letter-spacing: 0; color: var(--gold); font-variant-numeric: oldstyle-nums; line-height: 1; text-transform: none; }
+.card-kicker .zh-tag { color: var(--text); }
+.card-kicker .dur { display: none; }
+.card-title { font-family: var(--font-serif); font-weight: 700; font-size: 18.5px; line-height: 1.55; }
+.card-title-en { font-size: 16px; }
+.card-desc { display: none; }
+.card:hover .card-title { text-decoration-color: var(--gold); }
+
+/* 单集页 */
+.site-header.slim { border-bottom: 1px solid var(--gold); }
+.wordmark { font-weight: 600; font-size: 22px; letter-spacing: .02em; }
+.wordmark .wm-cn { font-family: var(--font-serif); letter-spacing: .2em; }
+.ep-head { padding-top: 70px; }
+.ep-kicker { color: var(--gold); }
+.ep-kicker .k-zh { color: var(--text); }
+.ep-title { font-family: var(--font-serif); font-weight: 900; letter-spacing: .02em; }
+.ep-title::after { content: ''; display: block; width: 80px; height: 1px; background: var(--gold); margin: 28px auto 0; }
+.ep-title-en { font-size: 19px; }
+.ep-byline { font-family: var(--font-serif); letter-spacing: .08em; }
+.media { border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); }
+.video-facade img { filter: sepia(.35) grayscale(.6); }
+.ap-play { background: var(--accent); color: var(--on-accent); }
+.ap-label { color: var(--gold); }
+.ap-fill, .ap-fill::after, .mp-fill { background: var(--gold); }
+.read-progress { background: var(--gold); }
+body.epjs .tab-btn { font-family: var(--font-display); font-size: 15px; letter-spacing: .16em; text-transform: uppercase; }
+body.epjs .tab-btn.on { border-bottom-color: var(--gold); }
+
+/* 正文：思源宋体，小节编号用罗马数字，摘句金线，列表金色菱形 */
+.zh-article h2 { font-family: var(--font-serif); font-weight: 900; text-align: center; }
+.zh-article h2::before { content: counter(sec, upper-roman); font-family: var(--font-display); font-weight: 500; font-size: .9em; letter-spacing: .1em; color: var(--gold); text-align: center; }
+.zh-article h2::after { content: ''; display: block; width: 40px; height: 1px; background: var(--gold); margin: .7em auto 0; }
+.zh-article blockquote { text-align: center; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); font-family: var(--font-serif); font-size: 1.12em; padding: 1.4em 1em; }
+.zh-article blockquote.hang { text-indent: 0; }
+.zh-article blockquote cite { font-family: var(--font-display); font-size: 14px; color: var(--gold); letter-spacing: .24em; text-transform: uppercase; }
+.zh-article ul, .zh-article ol { border-top: 1px solid var(--gold); }
+.zh-article ul > li::before { width: .42em; height: .42em; background: var(--gold); transform: rotate(45deg); }
+html:not(.indent) .zh-article p.dropcap::first-letter { color: var(--gold); font-family: var(--font-serif); font-weight: 900; }
+.zh-article .end-mark::after { content: '❦'; background: none; width: auto; height: auto; color: var(--gold); font-size: 1.1em; vertical-align: -.05em; }
+.toc-list a::before { content: counter(toc, upper-roman); font-family: var(--font-display); color: var(--gold); min-width: 2.2em; }
+.toc-list a.on { background: var(--zh-soft); }
+
+.colophon { border: 1px solid var(--gold); outline: 1px solid var(--gold); outline-offset: 4px; padding: 30px 28px; }
+.colo-k { color: var(--gold); font-family: var(--font-display); font-size: 15px; letter-spacing: .3em; }
+.colophon .ft-btn { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ft-btn { border-radius: 0; letter-spacing: .14em; }
+.site-footer .ft-btn:not(.ghost) { background: var(--gold); border-color: var(--gold); color: #12301f; }
+.ft-mark { font-weight: 600; }
+.ft-top { border-bottom-color: var(--f-line); }
+.ft-col h2 { font-family: var(--font-display); font-size: 13px; letter-spacing: .26em; color: #c5a467; }
+
+.ar-year h2 { font-weight: 600; font-size: 52px; color: var(--gold); border-bottom-color: var(--gold); font-variant-numeric: oldstyle-nums; }
+.ar-nav a { font-size: 18px; }
+.ar-zh { color: var(--gold); }
+.more-btn { border-radius: 0; border-color: var(--gold); letter-spacing: .2em; }
+.more-btn:hover { background: var(--accent); color: var(--on-accent); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-media { order: -1; }
+}
+@media (max-width: 640px) {
+  .masthead > .wrap { padding: 0 16px; outline-offset: 3px; }
+  .mast-facts div + div { border-left: 0; }
+  .card .thumb { outline: 0; }
+  .card-kicker .ep-n { font-size: 22px; }
+}
