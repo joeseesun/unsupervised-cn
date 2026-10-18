@@ -1,0 +1,9 @@
+# 构建产物与缓存
+sites/
+scripts/.cache/
+__pycache__/
+*.pyc
+.DS_Store
+# 受版权保护的英文文稿与音频不入库
+data/*/transcripts/
+data/_audio/
