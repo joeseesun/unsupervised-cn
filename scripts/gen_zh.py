@@ -220,7 +220,7 @@ def main():
             continue
         t0 = time.time()
         try:
-            text, finish = gen_one(slug, seq, key)
+            text, finish = gen_one(slug, seq, key, max_chars=int(__import__('os').environ.get('ZH_MAX_CHARS', 120000)))
         except Exception as e:
             print(f"{slug}/{seq}: ERROR {type(e).__name__}: {str(e)[:120]}", flush=True)
             continue
