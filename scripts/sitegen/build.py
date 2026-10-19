@@ -27,7 +27,9 @@ STATIC = HERE / 'static'
 sys.path.insert(0, str(HERE))
 from themes import SHOWS  # noqa: E402
 
-V = '2'  # 静态资源版本号，改样式 / 脚本时递增
+# 静态资源版本号：取共用样式 / 主题 / 脚本内容的哈希，内容一变地址就变，
+# Service Worker 与浏览器缓存自动失效（手动递增容易忘，会导致「已部署但看不到」）
+V = hashlib.md5(b''.join(p.read_bytes() for p in sorted(STATIC.rglob('*')) if p.is_file() and p.suffix in ('.css', '.js'))).hexdigest()[:8]
 
 
 # ---------------------------------------------------------------- 数据
@@ -873,6 +875,13 @@ def build(slug):
     import brand
     brand.build_assets(slug, cfg, eps, out)
     n_zh = sum(1 for e in eps if e['zh_body'])
+    # 数据体检：多期共用同一份文稿说明抓取错配，基于它写的精读会张冠李戴
+    seen = {}
+    for e in eps:
+        if e['tr']:
+            seen.setdefault(hashlib.md5(e['tr']['text'][:20000].encode()).hexdigest(), []).append(e['seq'])
+    for seqs in (v for v in seen.values() if len(v) > 1):
+        print(f'  ⚠ {slug}: 第 {sorted(seqs)} 期共用同一份文稿，需重新转写后再生成精读')
     print(f'{slug}: {len(eps)} 期，精读 {n_zh} 篇 -> {out}')
 
 
