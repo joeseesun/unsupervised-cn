@@ -73,6 +73,9 @@ def fmt_dur(sec):
 
 def load_show(slug):
     raw = json.loads((DATA / slug / 'episodes.json').read_text())['episodes']
+    # 补录的 YouTube 视频（原播放列表漏掉的，按频道全量列表人工核对后写入），RSS 刷新不会冲掉
+    yo_ = DATA / slug / 'yt_overrides.json'
+    yt_over = json.loads(yo_.read_text()) if yo_.exists() else {}
     tp_ = DATA / slug / 'translations.json'
     trans = json.loads(tp_.read_text()) if tp_.exists() else {}
     n = len(raw)
@@ -106,7 +109,7 @@ def load_show(slug):
             dur = 0
         eps.append({
             'seq': seq, 'file': f, 'url': f'/ep/{f}', 'title': e['title'].strip(), 'date': e.get('date') or '',
-            'dur': dur, 'desc': (e.get('description') or '').strip(), 'yt': e.get('ytId') or '',
+            'dur': dur, 'desc': (e.get('description') or '').strip(), 'yt': e.get('ytId') or yt_over.get(e['id'], ''),
             'audio': e.get('audio') or '', 'link': e.get('link') or '',
             'zh_title': zh_title, 'zh_body': zh_body,
             'zh_t': (zh_title if re.search(r'[\u4e00-\u9fff]', zh_title) else '') or (trans.get(e['id']) or {}).get('zh', '') or zh_title,
@@ -370,14 +373,20 @@ def zh_stats(body):
     return chars, max(1, round(chars / 450)) if chars else 0
 
 
+def thumb_url(e, big=False):
+    """有 YouTube 视频用视频缩略图，没有就用站点风格的生成封面（brand.build_covers）。"""
+    if e['yt']:
+        return f'https://i.ytimg.com/vi/{e["yt"]}/{"maxresdefault" if big else "mqdefault"}.jpg'
+    return f'/covers/{e["file"][:-5]}.jpg'
+
+
 def card_title(e):
     return e['zh_t'] or e['title']
 
 
 # ---------------------------------------------------------------- 首页
 def ssr_card(cfg, e):
-    thumb = (f'<img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/{e["yt"]}/mqdefault.jpg" alt="" width="320" height="180">'
-             if e['yt'] else f'<div class="no-img">{esc(cfg["ep_label"])} {e["seq"]}</div>')
+    thumb = f'<img{"" if e["yt"] else " class=cv"} loading="lazy" decoding="async" src="{thumb_url(e)}" alt="" width="320" height="180">'
     dt = e['date'][:7].replace('-', '.')
     tag = f'<span class="zh-tag">{esc(cfg["kicker_zh"])}</span>' if e['zh_body'] else ''
     rm = zh_stats(e['zh_body'])[1] if e['zh_body'] else 0
@@ -394,8 +403,9 @@ def ssr_card(cfg, e):
 def ssr_hero(cfg, e):
     when = fmt_date(e['date'])
     by = ' · '.join(x for x in [when, fmt_dur(e['dur']), f'{cfg["ep_label"]} {e["seq"]}'] if x)
-    img = (f'<img src="https://i.ytimg.com/vi/{e["yt"]}/maxresdefault.jpg" alt="" '
-           f'onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/{e["yt"]}/hqdefault.jpg\'">' if e['yt'] else '')
+    img = (f'<img src="{thumb_url(e, True)}" alt="" '
+           f'onerror="this.onerror=null;this.src=\'https://i.ytimg.com/vi/{e["yt"]}/hqdefault.jpg\'">' if e['yt'] else
+           f'<img class="cv" src="{thumb_url(e)}" alt="">')
     first = re.search(r'<p>(.*?)</p>', e['zh_body'], flags=re.S)
     lede = strip_tags(first.group(1))[:120] + '…' if first else ''
     return (f'<a class="hero-media" href="{e["url"]}" tabindex="-1" aria-hidden="true">{img}</a>'
@@ -439,7 +449,8 @@ def build_index(cfg, eps, out):
     data = [{'n': e['seq'], 't': e['title'], 's': e['file'], 'u': e['url'], 'd': e['date'], 'y': e['yt'],
              'zh': e['zh_t'] or None, 'tr': 'tr' if e['tr'] else None, 'au': bool(e['audio']),
              'r': 1 if e['zh_body'] else 0, 'ds': e['zh_desc'] or e['desc'][:200], 'du': e['dur'],
-             'rm': zh_stats(e['zh_body'])[1] if e['zh_body'] else 0} for e in eps]
+             'rm': zh_stats(e['zh_body'])[1] if e['zh_body'] else 0,
+             'c': '' if e['yt'] else thumb_url(e)} for e in eps]
     (out / 'data').mkdir(exist_ok=True)
     (out / 'data' / 'episodes.json').write_text(json.dumps({'updated': date.today().isoformat(), 'episodes': data},
                                                            ensure_ascii=False, separators=(',', ':')))
@@ -609,7 +620,7 @@ def build_episode(cfg, eps, i, out, rel=()):
         items = []
         for j in rel:
             x = eps[j]
-            img = f'<img loading="lazy" src="https://i.ytimg.com/vi/{x["yt"]}/mqdefault.jpg" alt="" width="320" height="180">' if x['yt'] else ''
+            img = f'<img{"" if x["yt"] else " class=cv"} loading="lazy" src="{thumb_url(x)}" alt="" width="320" height="180">'
             _, rm = zh_stats(x['zh_body']) if x['zh_body'] else (0, 0)
             meta = f'{esc(cfg["ep_label"])} {x["seq"]}' + (f' · 精读 {rm} 分钟' if rm else '')
             items.append(f'<a class="rel-item" href="{x["url"]}"><span class="rel-thumb">{img}</span>'

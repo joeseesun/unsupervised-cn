@@ -81,9 +81,8 @@
 /* 头条：黑框海报，图片红黑双色调 */
 .hero { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; padding: 40px 0; border-bottom: 3px solid var(--rule); }
 .hero-media { border: 3px solid var(--rule); aspect-ratio: 4/3; position: relative; }
-.hero-media img { filter: grayscale(1) contrast(1.15); mix-blend-mode: multiply; }
-.hero-media { background: var(--brand); }
-.hero:hover .hero-media img { filter: grayscale(0); mix-blend-mode: normal; }
+/* 缩略图本身就是红黑配色，直接用原图原色，靠粗黑框统一；不加遮罩 */
+.hero-media { background: var(--rule); }
 .hero-text { text-align: left; border: 3px solid var(--rule); border-left: 0; padding: 36px; align-self: stretch; display: flex; flex-direction: column; justify-content: center; background: var(--card); }
 .hero-kicker { display: inline-block; align-self: flex-start; background: var(--brand); color: var(--on-brand); padding: 5px 10px; }
 .hero-title { font-weight: 900; letter-spacing: -.01em; }
@@ -102,9 +101,8 @@
 .grid { gap: 28px; padding-top: 30px; }
 .card { border: 3px solid var(--rule); background: var(--card); transition: transform .15s ease, box-shadow .15s ease; }
 .card:hover { transform: translate(-4px, -4px); box-shadow: var(--shadow); }
-.card .thumb { border-bottom: 3px solid var(--rule); background: var(--brand); }
-.card .thumb img { filter: grayscale(1) contrast(1.15); mix-blend-mode: multiply; }
-.card:hover .thumb img { filter: none; mix-blend-mode: normal; transform: none; }
+.card .thumb { border-bottom: 3px solid var(--rule); background: var(--rule); }
+.card:hover .thumb img { transform: none; }
 .card-body { padding: 16px 16px 18px; }
 .card-kicker { flex-wrap: wrap; }
 .card-kicker .ep-n { font-size: 26px; font-weight: 900; color: var(--text); letter-spacing: -.03em; line-height: 1; }
@@ -124,7 +122,7 @@
 .ep-title-en { font-style: normal; font-weight: 700; }
 .ep-byline { justify-content: flex-start; font-weight: 600; }
 .media { border: 3px solid var(--rule); padding: 0 16px; background: var(--card); }
-.video-facade img { filter: grayscale(1) contrast(1.1); }
+.video-facade img { filter: none; opacity: 1; }
 .ap-play { background: var(--brand); color: var(--on-brand); border-radius: 0; }
 .ap-label { color: var(--brand); }
 .ap-fill, .ap-fill::after, .mp-fill, .read-progress { background: var(--brand); }

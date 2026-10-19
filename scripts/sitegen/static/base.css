@@ -638,3 +638,6 @@ button.colo-link { background: none; border: 0; cursor: pointer; padding: 0; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }
+
+/* 生成的封面已是站点配色，不再套主题对 YouTube 缩略图用的滤镜 / 混合模式 */
+img.cv, .card:hover img.cv, .hero:hover img.cv { filter: none !important; mix-blend-mode: normal !important; }
