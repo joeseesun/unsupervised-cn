@@ -10,6 +10,7 @@
 PNG 图标与分享卡片在构建时用 Pillow 生成。分享卡片按内容哈希增量生成。
 """
 import hashlib
+import re
 import io
 import json
 import shutil
@@ -410,6 +411,90 @@ def card_bauhaus(cfg, e):
     return im
 
 
+# ---------------------------------------------------------------- 无视频单集的封面（16:9，替代 YouTube 缩略图）
+CW, CH = 960, 540
+
+
+def _short_title(e):
+    t = e.get('zh_t') or e['title']
+    return re.split(r'[：:，,]', t)[0] if len(t) > 22 else t
+
+
+def cover_terminal(cfg, e):
+    bg, lime, text, mut = hexrgb('#0b0c0a'), hexrgb('#c6f432'), hexrgb('#ecefe6'), hexrgb('#8b9182')
+    im = Image.new('RGB', (CW, CH), bg); d = ImageDraw.Draw(im)
+    for x in range(0, CW, 32): d.line([(x, 0), (x, CH)], fill=(22, 25, 19))
+    for y in range(0, CH, 32): d.line([(0, y), (CW, y)], fill=(22, 25, 19))
+    d.text((56, 52), '$ nopriors --episode', font=font('JetBrainsMono.ttf', 24, 'Regular'), fill=mut)
+    d.text((52, 92), f'EP {e["seq"]}', font=font('JetBrainsMono.ttf', 150, 'ExtraBold'), fill=lime)
+    f = font('NotoSansSC.ttf', 40, 'Black')
+    y = 300
+    for ln in wrap_balanced(d, _short_title(e), f, CW - 120, 2):
+        d.text((56, y), ln, font=f, fill=text); y += 56
+    d.text((56, CH - 56), 'No Priors_', font=font('InterTight.ttf', 30, 'ExtraBold'), fill=mut)
+    return im
+
+
+def cover_journal(cfg, e):
+    paper, ink, blue, mut = hexrgb('#fbfaf6'), hexrgb('#161616'), hexrgb('#1d3fb8'), hexrgb('#6b6a64')
+    im = Image.new('RGB', (CW, CH), paper); d = ImageDraw.Draw(im)
+    d.text((CW / 2, 150), f'§ {e["seq"]}', font=font('Newsreader.ttf', 150, 'SemiBold'), fill=blue, anchor='mm')
+    d.line([(CW / 2 - 140, 250), (CW / 2 + 140, 250)], fill=ink, width=2)
+    f = font('NotoSerifSC.ttf', 40, 'Bold')
+    y = 290
+    for ln in wrap_balanced(d, _short_title(e), f, CW - 200, 2):
+        d.text((CW / 2, y), ln, font=f, fill=ink, anchor='ma'); y += 58
+    d.text((CW / 2, CH - 50), 'Cognitive Revolution', font=font('Newsreader-Italic.ttf', 26, 'Regular'), fill=mut, anchor='mm')
+    return im
+
+
+def cover_ledger(cfg, e):
+    green, gold, cream = hexrgb('#12301f'), hexrgb('#c5a467'), hexrgb('#f4efe4')
+    im = Image.new('RGB', (CW, CH), green); d = ImageDraw.Draw(im)
+    d.rectangle([22, 22, CW - 22, CH - 22], outline=gold, width=2)
+    d.rectangle([30, 30, CW - 30, CH - 30], outline=gold, width=1)
+    d.text((CW / 2, 150), f'No. {e["seq"]}', font=font('Cormorant.ttf', 130, 'SemiBold'), fill=gold, anchor='mm')
+    d.line([(CW / 2 - 60, 245), (CW / 2 + 60, 245)], fill=gold, width=2)
+    f = font('NotoSerifSC.ttf', 40, 'Bold')
+    y = 285
+    for ln in wrap_balanced(d, _short_title(e), f, CW - 220, 2):
+        d.text((CW / 2, y), ln, font=f, fill=cream, anchor='ma'); y += 58
+    d.text((CW / 2, CH - 70), 'T R A I N I N G   D A T A', font=font('Cormorant.ttf', 22, 'SemiBold'), fill=gold, anchor='mm')
+    return im
+
+
+def cover_bauhaus(cfg, e):
+    paper, ink, red = hexrgb('#f2eee6'), hexrgb('#111111'), hexrgb('#e0483e')
+    im = Image.new('RGB', (CW, CH), paper); d = ImageDraw.Draw(im)
+    d.ellipse([CW - 380, -160, CW + 120, 340], fill=red)
+    d.rectangle([CW - 170, CH - 170, CW, CH], fill=ink)
+    d.text((48, 20), f'#{e["seq"]}', font=font('Archivo.ttf', 190, 'Black'), fill=ink)
+    f = font('NotoSansSC.ttf', 42, 'Black')
+    y = 300
+    for ln in wrap_balanced(d, _short_title(e), f, CW - 260, 2):
+        d.text((52, y), ln, font=f, fill=ink); y += 56
+    d.rectangle([52, CH - 78, 52 + 330, CH - 40], fill=ink)
+    d.text((64, CH - 59), 'UNSUPERVISED LEARNING', font=font('Archivo.ttf', 22, 'ExtraBold'), fill=paper, anchor='lm')
+    return im
+
+
+COVERS = {'terminal': cover_terminal, 'journal': cover_journal, 'ledger': cover_ledger, 'bauhaus': cover_bauhaus}
+
+
+def build_covers(slug, cfg, eps, out):
+    """没有 YouTube 视频的单集生成站点风格封面：/covers/<单集文件名>.jpg。"""
+    cv = out / 'covers'
+    cv.mkdir(exist_ok=True)
+    draw, n = COVERS[cfg['style']], 0
+    for e in eps:
+        if e['yt']:
+            continue
+        p = cv / (e['file'][:-5] + '.jpg')
+        draw(cfg, e).save(p, quality=86, optimize=True, progressive=True)
+        n += 1
+    return n
+
+
 CARDS = {'terminal': card_terminal, 'journal': card_journal, 'ledger': card_ledger, 'bauhaus': card_bauhaus}
 
 
@@ -442,4 +527,5 @@ def build_og(slug, cfg, eps, out):
 def build_assets(slug, cfg, eps, out):
     build_icons(slug, cfg, out)
     n = build_og(slug, cfg, eps, out)
-    print(f'  {slug}: icons ok, og cards {n} rendered')
+    c = build_covers(slug, cfg, eps, out)
+    print(f'  {slug}: icons ok, og cards {n} rendered, covers {c}')

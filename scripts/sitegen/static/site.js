@@ -134,7 +134,7 @@
   function cardHTML(e, toks) {
     const thumb = e.y
       ? `<img loading="lazy" decoding="async" src="https://i.ytimg.com/vi/${e.y}/mqdefault.jpg" alt="" width="320" height="180">`
-      : '<div class="no-img">LEX</div>';
+      : e.c ? `<img class="cv" loading="lazy" decoding="async" src="${e.c}" alt="" width="320" height="180">` : `<div class="no-img">${esc(SITE.name)}</div>`;
     const num = e.n != null ? `${SITE.ep} ${e.n}` : '特别节目';
     const date = e.d ? e.d.slice(0, 7).replace('-', '.') : '';
     const p = progressOf(e);
@@ -245,6 +245,7 @@
     const d = e.d ? `${e.d.slice(0, 4)} 年 ${+e.d.slice(5, 7)} 月` : '';
     const img = e.y
       ? `<img src="https://i.ytimg.com/vi/${e.y}/maxresdefault.jpg" alt="" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${e.y}/hqdefault.jpg'">`
+      : e.c ? `<img class="cv" src="${e.c}" alt="">`
       : '';
     const by = [d, e.du ? durShort(e.du) : '', e.n != null ? `${SITE.ep} ${e.n}` : ''].filter(Boolean).map(esc).join(' · ');
     box.innerHTML = `<a class="hero-media" href="${e.u}" tabindex="-1" aria-hidden="true">${img}</a>
@@ -289,7 +290,7 @@
       const meta = h.t > 30
         ? `听到 ${fmtT(h.t)}${h.d ? ` · 剩 ${fmtT(h.d - h.t)}` : ''}`
         : `读到 ${Math.round((h.rp || 0) * 100)}%`;
-      const img = e.y ? `<img loading="lazy" src="https://i.ytimg.com/vi/${e.y}/mqdefault.jpg" alt="">` : '';
+      const img = e.y ? `<img loading="lazy" src="https://i.ytimg.com/vi/${e.y}/mqdefault.jpg" alt="">` : e.c ? `<img class="cv" loading="lazy" src="${e.c}" alt="">` : '';
       return `<a class="cont-item" href="${e.u}">
         <div class="cont-thumb">${img}<span class="prog"><i style="width:${(p * 100).toFixed(1)}%"></i></span></div>
         <div class="cont-body"><div class="cont-title">${esc(e._zh)}</div><div class="cont-meta">${meta}</div></div></a>`;
