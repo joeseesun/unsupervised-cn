@@ -117,7 +117,13 @@ def chat(messages, key, timeout=900, model=None):
             content += piece
             if finish != "length" or not piece:
                 break
-        return stem + content, finish
+        # 模型有时会自己再写一遍预填的开头，避免拼成「<h2>《<h2>《」
+        body = content.lstrip()
+        if body.startswith('<h2>'):
+            return body, finish
+        if body.startswith('《'):
+            body = body[1:]
+        return (stem + body) if body else '', finish
     out = []
     finish = None
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -224,6 +230,9 @@ def main():
             print(f"{slug}/{seq}: EMPTY (finish={finish})", flush=True)
             continue
         n_cjk, problems = check(text)
+        if n_cjk < 1500:  # 生成失败或被截断：不落盘，留给下次重跑，避免站上出现空精读
+            print(f"{slug}/{seq}: TOO SHORT ({n_cjk}字, finish={finish}), not saved", flush=True)
+            continue
         if problems:
             print(f"{slug}/{seq}: finish={finish} {n_cjk}字 PROBLEMS:", flush=True)
             for p in problems:

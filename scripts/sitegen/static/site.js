@@ -144,7 +144,7 @@
     return `<a class="card" href="${e.u}">
       <div class="thumb">${thumb}${prog}</div>
       <div class="card-body">
-        <div class="card-kicker"><span class="ep-n">${num}</span><span>${date}</span>${e.du ? `<span class="dur">${durShort(e.du)}</span>` : ''}${e.r ? `<span class="zh-tag">${SITE.zhTag}</span>` : ''}</div>
+        <div class="card-kicker"><span class="ep-n">${num}</span><span>${date}</span>${e.rm ? `<span class="dur">精读 ${e.rm} 分钟</span>` : e.du ? `<span class="dur">${durShort(e.du)}</span>` : ''}${e.r ? `<span class="zh-tag">${SITE.zhTag}</span>` : ''}</div>
         <div class="card-title">${hl(e._zh, toks)}</div>
         ${en}${desc}
       </div>
@@ -160,6 +160,8 @@
     syncURL();
     renderHero();
     renderContinue();
+    const tp = document.querySelector('.topics');
+    if (tp) tp.querySelectorAll('[data-q]').forEach((b) => b.classList.toggle('on', b.dataset.q === state.q.trim()));
     renderResultLine();
     if (!LIST.length) {
       grid.innerHTML = emptyHTML();
@@ -202,6 +204,15 @@
       <div class="chips">${reset}${chips}</div></div>`;
   }
 
+  // 热门话题：点击即搜索
+  const topics = document.querySelector('.topics');
+  if (topics) topics.addEventListener('click', (e) => {
+    const c = e.target.closest('[data-q]');
+    if (!c) return;
+    input.value = c.dataset.q; setFilter('all'); state.q = c.dataset.q; syncSearchBox(); resetRender();
+    document.querySelector('#resultLine').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.umami) window.umami.track('topic', { q: c.dataset.q });
+  });
   if (grid) grid.addEventListener('click', (e) => {
     const c = e.target.closest('[data-q]');
     if (c) { input.value = c.dataset.q; setFilter('all'); state.q = c.dataset.q; syncSearchBox(); resetRender(); return; }

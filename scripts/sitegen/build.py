@@ -27,7 +27,7 @@ STATIC = HERE / 'static'
 sys.path.insert(0, str(HERE))
 from themes import SHOWS  # noqa: E402
 
-V = '1'  # 静态资源版本号，改样式 / 脚本时递增
+V = '2'  # 静态资源版本号，改样式 / 脚本时递增
 
 
 # ---------------------------------------------------------------- 数据
@@ -82,6 +82,8 @@ def load_show(slug):
         f = ep_file(e, seq)
         zp = DATA / slug / 'zh' / f'{seq:03d}.html'
         zh_raw = zp.read_text().strip() if zp.exists() else ''
+        if len(re.sub(r'\s+', '', strip_tags(zh_raw))) < 500:  # 生成失败的残片不算精读
+            zh_raw = ''
         zh_title, zh_body = '', zh_raw
         m = re.match(r'\s*<h2[^>]*>(.*?)</h2>\s*', zh_raw, flags=re.S)
         if m:  # 精读第一行的 h2 是中文大标题，提出来做文章标题
@@ -129,7 +131,8 @@ def head_script(cfg):
     sans: 'https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400;600&display=swap',
     serif: 'https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@400;600&display=swap',
     kai: 'https://cdn.jsdelivr.net/npm/lxgw-wenkai-screen-webfont@1.7.0/lxgwwenkaiscreen.css',
-    wei: 'https://fonts.googleapis.cn/css2?family=ZCOOL+XiaoWei&display=swap'
+    wei: 'https://fonts.googleapis.cn/css2?family=ZCOOL+XiaoWei&display=swap',
+    song: 'https://cdn.jsdelivr.net/npm/@chinese-fonts/jhlst@3.0.0/dist/%E4%BA%AC%E8%8F%AF%E8%80%81%E5%AE%8B%E4%BD%93v2_002/result.css'
   }};
   window.__lexLoadFont = function (k) {{
     if (!FONTS[k] || document.getElementById('lexfont-' + k)) return;
@@ -141,7 +144,6 @@ def head_script(cfg):
   if (z && /^(1[5-9]|2[0-2])$/.test(z)) d.style.setProperty('--read-size', z + 'px');
   if (lh && /^(1\\.\\d+|2(\\.\\d+)?)$/.test(lh)) d.style.setProperty('--read-lh', lh);
   if (w && /^\\d{{3}}$/.test(w)) d.style.setProperty('--measure', w + 'px');
-  if (g('lex-indent') === '1') d.classList.add('indent');
   var meta = document.querySelector('meta[name="theme-color"]');
   function syncMeta() {{ if (meta) meta.content = BG[t]; }}
   syncMeta();
@@ -284,7 +286,7 @@ def footer(cfg):
       <div class="ft-col ft-support"><h2>支持这个项目</h2>
         <p>一个人独立制作，没有广告，也不收费。如果这里的某篇精读让你有所收获，欢迎请作者喝杯咖啡，让它一直做下去。</p>
         <div class="ft-actions"><button type="button" class="ft-btn" data-open="rewardModal">打赏支持</button><button type="button" class="ft-btn ghost" data-open="followModal">关注公众号</button></div>
-        <p class="ft-social"><a href="https://github.com/joeseesun/" target="_blank" rel="noopener">GitHub</a><a href="https://x.com/vista8" target="_blank" rel="noopener">X @vista8</a><a href="/llms.txt">llms.txt</a></p></div>
+        <p class="ft-social"><a href="https://github.com/joeseesun/{next(k for k, c in SHOWS.items() if c is cfg)}-cn" target="_blank" rel="noopener">开源代码</a><a href="https://x.com/vista8" target="_blank" rel="noopener">X @vista8</a><a href="/llms.txt">llms.txt</a></p></div>
     </div>
     <div class="ft-bottom">
       <span>© 2026 向阳乔木 · 非官方粉丝站点，与 {esc(cfg['name'])} 及节目制作方无隶属关系</span>
@@ -319,6 +321,50 @@ def prune(o):
     return o
 
 
+STOP_EN = set("""the and for with from that this are was were you your our their about into how why what when who will can not but its it's
+has have had more most than then them they his her him she he out over all any new one two now just like also very podcast episode
+ai show talk talks discuss discusses joins join host hosts conversation interview ceo founder cofounder co-founder""".split())
+
+
+def related_index(eps, k=3):
+    """延伸阅读：TF-IDF 余弦相似度。特征 = 中文标题 / 简介 / 小节标题的二字词 + 英文标题与简介里的实词；
+    全站常见的词（AI、模型…）权重自然很低，嘉宾、公司、领域词权重高。不含自身与紧邻的上下期。"""
+    import math
+    from collections import Counter
+
+    def feats(e):
+        c = Counter()
+        heads = ' '.join(strip_tags(x) for x in re.findall(r'<h2[^>]*>(.*?)</h2>', e['zh_body'] or '', flags=re.S))
+        zh = re.sub(r'[^\u4e00-\u9fff]+', ' ', f"{e['zh_t']} {e['zh_desc']} {heads}")
+        for w in zh.split():
+            c.update(w[i:i + 2] for i in range(len(w) - 1))
+        en = re.findall(r"[a-z][a-z0-9\-']+", f"{e['title']} {e['title']} {e['desc'][:600]}".lower())
+        c.update(w for w in en if len(w) > 2 and w not in STOP_EN)
+        return c
+
+    F = [feats(e) for e in eps]
+    n = len(F)
+    df = Counter(t for f in F for t in f)
+    vecs = []
+    for f in F:
+        v = {t: (1 + math.log(c)) * math.log(n / df[t]) for t, c in f.items() if df[t] > 1}
+        norm = math.sqrt(sum(x * x for x in v.values())) or 1
+        vecs.append({t: x / norm for t, x in v.items()})
+    rel = []
+    for i, vi in enumerate(vecs):
+        scored = []
+        for j, vj in enumerate(vecs):
+            if abs(i - j) <= 1:
+                continue
+            small, big = (vi, vj) if len(vi) < len(vj) else (vj, vi)
+            sim = sum(x * big.get(t, 0) for t, x in small.items())
+            if sim > 0:
+                scored.append((sim, j))
+        scored.sort(reverse=True)
+        rel.append([j for _, j in scored[:k]])
+    return rel
+
+
 def zh_stats(body):
     chars = len(re.sub(r'\s+', '', strip_tags(body)))
     return chars, max(1, round(chars / 450)) if chars else 0
@@ -334,7 +380,9 @@ def ssr_card(cfg, e):
              if e['yt'] else f'<div class="no-img">{esc(cfg["ep_label"])} {e["seq"]}</div>')
     dt = e['date'][:7].replace('-', '.')
     tag = f'<span class="zh-tag">{esc(cfg["kicker_zh"])}</span>' if e['zh_body'] else ''
-    dur = f'<span class="dur">{fmt_dur(e["dur"])}</span>' if e['dur'] else ''
+    rm = zh_stats(e['zh_body'])[1] if e['zh_body'] else 0
+    dur = (f'<span class="dur">精读 {rm} 分钟</span>' if rm else
+           f'<span class="dur">{fmt_dur(e["dur"])}</span>' if e['dur'] else '')
     en = f'<div class="card-title-en" lang="en">{esc(e["title"])}</div>' if e['zh_t'] else ''
     desc = (f'<div class="card-desc">{esc(e["zh_desc"])}</div>' if e['zh_desc'] else
             f'<div class="card-desc" lang="en">{esc(e["desc"][:200])}</div>' if e['desc'] else '')
@@ -359,6 +407,29 @@ def ssr_hero(cfg, e):
             f'<a class="hero-cta" href="{e["url"]}">阅读全文{ICON_ARROW}</a></div>')
 
 
+# 热门话题候选：(显示名, 搜索词)。计数与站内搜索同一口径（同样的归一化与字段），点开后结果数与芯片上的数字一致
+TOPICS = [('OpenAI', 'OpenAI'), ('Anthropic', 'Anthropic'), ('谷歌', '谷歌'), ('英伟达', '英伟达'), ('DeepMind', 'DeepMind'),
+          ('Agent', 'Agent'), ('编程', '编程'), ('芯片', '芯片'), ('机器人', '机器人'), ('医疗', '医疗'), ('药物', '药物'),
+          ('国防', '国防'), ('开源', '开源'), ('强化学习', '强化学习'), ('安全', '安全'), ('对齐', '对齐'), ('投资', '投资'),
+          ('推理', '推理'), ('中国', '中国'), ('视频', '视频'), ('教育', '教育'), ('能源', '能源')]
+
+
+def _norm(t):
+    t = unicodedata.normalize('NFKD', t or '').lower()
+    return re.sub(r"[\s·•・\-–—_'’\"“”:：,，.。!！?？()（）\[\]【】#&/、|]+", '', t)
+
+
+def topic_chips(eps):
+    hay = [_norm(f"{e['zh_t']} {e['title']} {e['file']} {e['zh_desc'] or e['desc'][:200]}") for e in eps]
+    counts = []
+    for label, q in TOPICS:
+        n = sum(1 for h in hay if _norm(q) in h)
+        if n >= 4:
+            counts.append((n, label, q))
+    counts.sort(reverse=True)
+    return ''.join(f'<button type="button" class="topic" data-q="{esc(q)}">{esc(label)}<span>{n}</span></button>' for n, label, q in counts[:10])
+
+
 def build_index(cfg, eps, out):
     d = cfg['domain']
     n_zh = sum(1 for e in eps if e['zh_body'])
@@ -367,7 +438,8 @@ def build_index(cfg, eps, out):
     latest = next((e for e in eps if e['zh_body']), None)
     data = [{'n': e['seq'], 't': e['title'], 's': e['file'], 'u': e['url'], 'd': e['date'], 'y': e['yt'],
              'zh': e['zh_t'] or None, 'tr': 'tr' if e['tr'] else None, 'au': bool(e['audio']),
-             'r': 1 if e['zh_body'] else 0, 'ds': e['zh_desc'] or e['desc'][:200], 'du': e['dur']} for e in eps]
+             'r': 1 if e['zh_body'] else 0, 'ds': e['zh_desc'] or e['desc'][:200], 'du': e['dur'],
+             'rm': zh_stats(e['zh_body'])[1] if e['zh_body'] else 0} for e in eps]
     (out / 'data').mkdir(exist_ok=True)
     (out / 'data' / 'episodes.json').write_text(json.dumps({'updated': date.today().isoformat(), 'episodes': data},
                                                            ensure_ascii=False, separators=(',', ':')))
@@ -433,6 +505,7 @@ def build_index(cfg, eps, out):
     <div class="sec-h"><h2 id="cont-h">继续</h2><button type="button" id="contClear">清除记录</button></div>
     <div class="continue-row" id="contRow"></div>
   </section>
+  <nav class="topics" aria-label="热门话题"><span class="topics-k">热门话题</span>{topic_chips(eps)}</nav>
   <div class="result-line" id="resultLine" aria-live="polite"><h2>全部单集<small>最新在前</small></h2></div>
   <div id="grid" class="grid">{''.join(ssr_card(cfg, e) for e in eps[:30])}</div>
   <div id="sentinel" class="sentinel"></div>
@@ -456,7 +529,7 @@ COLOPHON = ('<aside class="colophon" aria-label="致读者"><div class="colo-k">
             '<a class="colo-link" href="/feed.xml">RSS 订阅更新</a></div></aside>')
 
 
-def build_episode(cfg, eps, i, out):
+def build_episode(cfg, eps, i, out, rel=()):
     e = eps[i]
     d = cfg['domain']
     url = f'https://{d}{e["url"]}'
@@ -531,6 +604,18 @@ def build_episode(cfg, eps, i, out):
                 f'<span class="pn-t">{esc(card_title(x))}</span></a>')
     prevnext = pn(eps[i + 1] if i + 1 < len(eps) else None, 'prev') + pn(eps[i - 1] if i > 0 else None, 'next')
 
+    related = ''
+    if rel:
+        items = []
+        for j in rel:
+            x = eps[j]
+            img = f'<img loading="lazy" src="https://i.ytimg.com/vi/{x["yt"]}/mqdefault.jpg" alt="" width="320" height="180">' if x['yt'] else ''
+            _, rm = zh_stats(x['zh_body']) if x['zh_body'] else (0, 0)
+            meta = f'{esc(cfg["ep_label"])} {x["seq"]}' + (f' · 精读 {rm} 分钟' if rm else '')
+            items.append(f'<a class="rel-item" href="{x["url"]}"><span class="rel-thumb">{img}</span>'
+                         f'<span class="rel-meta">{meta}</span><span class="rel-title">{esc(card_title(x))}</span></a>')
+        related = f'<section class="related" aria-label="延伸阅读"><h2>延伸阅读</h2><div class="rel-grid">{"".join(items)}</div></section>'
+
     sections = [strip_tags(x).strip() for x in re.findall(r'<h2[^>]*>(.*?)</h2>', e['zh_body'], flags=re.S)]
     ld = {"@context": "https://schema.org", "@graph": [
         {"@type": "PodcastEpisode", "@id": f'{url}#episode', "url": url, "name": e['title'], "alternativeHeadline": e['zh_t'],
@@ -571,6 +656,7 @@ def build_episode(cfg, eps, i, out):
     </header>
     {media}
     <section class="content-tabs">{tabs_html}{''.join(panels)}</section>
+    {related}
     {''.join(res)}
     <nav class="ep-prevnext" aria-label="上一期 / 下一期">{prevnext}</nav>
   </article>
@@ -765,8 +851,9 @@ def build(slug):
         shutil.copy(STATIC / f, out / f)
     (out / 'sw.js').write_text((STATIC / 'sw.js').read_text().replace("const VERSION = 'lex-v1'", f"const VERSION = '{slug}-v{V}'")
                                .replace("'/ep.js'", "'/read.js'").replace("'/app.js'", "'/site.js'"))
+    rel = related_index(eps)
     for i in range(len(eps)):
-        build_episode(cfg, eps, i, out)
+        build_episode(cfg, eps, i, out, rel[i])
     build_index(cfg, eps, out)
     build_archive(cfg, eps, out)
     build_special(cfg, eps, out)
