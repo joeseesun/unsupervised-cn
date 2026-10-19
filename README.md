@@ -4,9 +4,9 @@
 
 ![Unsupervised Learning 中文精读首页](docs/screenshots/home.png)
 
-> 把 Unsupervised Learning 全部 103 期节目做成一个可以认真读的中文站：每期一个页面，中文标题与简介、节目音频与视频、英文文稿，以及 3 篇 AI 改写的中文长文精读。
+> 把 Unsupervised Learning 全部 103 期节目做成一个可以认真读的中文站：每期一个页面，中文标题与简介、节目音频与视频、英文文稿，以及 103 篇 AI 改写的中文长文精读。
 >
-> A Chinese reading companion for **Unsupervised Learning with Jacob Effron | Redpoint** — every episode gets its own page with a Chinese title and summary, audio, video, transcript, and (for 3 episodes so far) a long-form Chinese deep read.
+> A Chinese reading companion for **Unsupervised Learning with Jacob Effron | Redpoint** — every episode gets its own page with a Chinese title and summary, audio, video, transcript, and (for 103 episodes so far) a long-form Chinese deep read.
 
 [**在线访问 unsupervised.qiaomu.ai**](https://unsupervised.qiaomu.ai/) · [RSS 全文订阅](https://unsupervised.qiaomu.ai/feed.xml) · [单集目录](https://unsupervised.qiaomu.ai/archive/) · [llms.txt](https://unsupervised.qiaomu.ai/llms.txt) · [MIT License](LICENSE)
 
@@ -16,7 +16,7 @@
 
 Unsupervised Learning 是红点创投（Redpoint）的 AI 播客，由合伙人 Jacob Effron 主持。每期与 AI 研究者、创业者对谈前沿模型动态、开源生态与商业化路径，常有 OpenAI、DeepMind、Cohere 等一线人物出镜。
 
-这个仓库是它的非官方中文站点 **[unsupervised.qiaomu.ai](https://unsupervised.qiaomu.ai/)** 的全部源码与中文内容：一个零依赖的静态站生成器，加上节目元数据、103 期中文标题翻译和 3 篇中文精读。
+这个仓库是它的非官方中文站点 **[unsupervised.qiaomu.ai](https://unsupervised.qiaomu.ai/)** 的全部源码与中文内容：一个零依赖的静态站生成器，加上节目元数据、103 期中文标题翻译和 103 篇中文精读。
 
 ## 核心能力
 
@@ -104,7 +104,7 @@ scripts/sitegen/static/        共用前端脚本、结构样式与各站主题�
 **Unsupervised Learning 中文精读** is an unofficial Chinese reading companion for *Unsupervised Learning with Jacob Effron | Redpoint* (hosted by Jacob Effron), live at **https://unsupervised.qiaomu.ai/**.
 
 - **103 episodes**, each with a Chinese title and summary, audio player with resume, YouTube embed, and English transcript where available.
-- **3 long-form Chinese deep reads** with a magazine-grade reading experience: section numbering, pull quotes, drop caps, a reading-settings panel (3 themes, 5 open-source Chinese fonts, size / leading / measure / indent), a centered table of contents and reading progress.
+- **103 long-form Chinese deep reads** with a magazine-grade reading experience: section numbering, pull quotes, drop caps, a reading-settings panel (3 themes, 5 open-source Chinese fonts, size / leading / measure / indent), a centered table of contents and reading progress.
 - **Search** with normalization, multi-term matching, ranking and highlighting; **continue listening / reading**; **full-text RSS**.
 - **SEO / GEO**: server-rendered first screen, `Article` + `PodcastEpisode` JSON-LD, a Markdown version of every deep read, `llms.txt`, sitemap, AI crawlers welcome.
 - **Share cards** generated per episode (face-centered portrait crops, punctuation-aware balanced title wrapping), full **PWA** with offline reading, custom 404 and offline pages.

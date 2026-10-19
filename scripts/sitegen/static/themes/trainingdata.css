@@ -162,4 +162,6 @@ html:not(.indent) .zh-article p.dropcap::first-letter { color: var(--gold); font
   .mast-facts div + div { border-left: 0; }
   .card .thumb { outline: 0; }
   .card-kicker .ep-n { font-size: 22px; }
+  body.epjs .tab-btn { letter-spacing: .06em; font-size: 14px; }
+  .tabs { gap: 16px; }
 }
