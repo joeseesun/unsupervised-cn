@@ -9,6 +9,18 @@
  },
  "episodes": [
   {
+   "id": "899611ab-5215-4e00-b177-4be18b8bdb5f",
+   "title": "Ep 95: Modal CEO on the Future of Inference, the Chaos of the GPU Market & Origins of the Sandbox Bet",
+   "date": "2026-10-28",
+   "duration": 3566,
+   "description": "Jacob Effron and Pat Chase sit down with Erik Bernhardsson, co-founder and CEO of Modal, for his second appearance on Unsupervised Learning, now with the company past a $1B run rate. They dig into how the AI compute market actually works behind the scenes, why Modal’s early bets on sandboxes and low-level infrastructure paid off, and Erik’s takes on NeoClouds, NeoLabs, and where GPU prices are headed next.\n\n \n\n(0:00) Intro\n(1:26) The Compute Market Today\n(5:16) Modal’s Path to LLM Inference\n(10:02) Building the Hard Infrastructure\n(12:32) Unsolved Problems in Inference\n(16:07) Chips & Model Sizes\n(21:21) What Wins in Inference\n(24:56) Prioritizing a Multi-Product Roadmap\n(30:20) Agents as Modal’s Users\n(33:19) The Next Big Bet After Sandboxes\n(38:58) Robotics & Multimodal Inference\n(41:04) Scaling From $2M to $1B\n(42:51) NeoClouds & NeoLabs\n(48:15) RL as a Service\n(51:40) Quickfire\n\n \n\nPat is an AI investor at Redpoint Ventures. He’s led Redpoint’s investments in companies like Modal, Serval & Hex. Follow Pat on Twitter: https://x.com/patrickachase\n\nJacob is an AI investor at Redpoint Ventures. He's led Redpoint's investments in companies like Abridge, Physical Intelligence & Legora. Follow Jacob on Twitter (@jacobeffron).\n\nOn Unsupervised Learning we probe the sharpest minds in AI in search for the truth about what's real today, what will be real in the future and what it all means for businesses and the world. If you're a builder, researcher or investor navigating the AI world, this podcast will help you deconstruct and understand the most important breakthroughs and see a clearer picture of reality. Subscribe to this show to stay up to date on our latest episodes.",
+   "audio": "https://cdn.simplecast.com/media/audio/transcoded/b3414ac6-61c8-4752-8722-491e1457c3bf/2c08ad29-5b79-42c0-a40a-6c1af4327f2f/episodes/audio/group/4d1fb055-3db5-4d27-aafe-c4540757b98d/group-item/8efd2ec5-7f4c-4f2c-9b03-d9f03327ef8d/128_default_tc.mp3?aid=rss_feed&feed=dOSE_bdP",
+   "link": "https://unsupervised-learning.simplecast.com/episodes/ep-95-modal-ceo-on-the-future-of-inference-the-chaos-of-the-gpu-market-origins-of-the-sandbox-bet-7BVMndlI",
+   "image": "",
+   "epnum": 95,
+   "ytId": null
+  },
+  {
    "id": "77097e65-4ead-46c4-b497-36fa09bd0f11",
    "title": "Ep 94: Applied Compute CEO on the Limits of RL, the New AI Hyperscaler & Why Post-Training Wins Inference",
    "date": "2026-10-06",

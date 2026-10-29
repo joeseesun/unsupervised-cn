@@ -69,6 +69,9 @@ ALLOWED_TAGS = {"h2", "p", "strong", "ul", "li", "blockquote"}
 
 
 def get_key():
+    # 服务器上从环境变量读（/etc/qiaomu-podcasts.env）；本机从 macOS 钥匙串读
+    if __import__('os').environ.get('MAGPIE_API_KEY'):
+        return __import__('os').environ['MAGPIE_API_KEY']
     return subprocess.run(
         ["security", "find-generic-password", "-s", "qiaomu-llm", "-a", "magpie", "-w"],
         capture_output=True, text=True, check=True,

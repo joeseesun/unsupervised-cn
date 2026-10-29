@@ -7,6 +7,7 @@
 用法：python3 scripts/translate_titles.py [slug ...]
 """
 import json
+import os
 import subprocess
 import sys
 import time
@@ -20,8 +21,9 @@ DATA = ROOT / 'data'
 API = 'https://magpie.qiaomu.ai/v1/chat/completions'
 MODELS = ['trae-cn/deepseek-v4.1-flash', 'opencode-go/deepseek-v4.1-flash', 'workbuddy/deepseek-v4.1-flash']
 BATCH = 12
-KEY = subprocess.run(['security', 'find-generic-password', '-s', 'qiaomu-llm', '-a', 'magpie', '-w'],
-                     capture_output=True, text=True).stdout.strip()
+KEY = os.environ.get('MAGPIE_API_KEY') or subprocess.run(  # 服务器读环境变量，本机读钥匙串
+    ['security', 'find-generic-password', '-s', 'qiaomu-llm', '-a', 'magpie', '-w'],
+    capture_output=True, text=True).stdout.strip()
 assert KEY, 'keychain key not found'
 
 SHOW = {
