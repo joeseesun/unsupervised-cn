@@ -414,5 +414,9 @@
 "899611ab-5215-4e00-b177-4be18b8bdb5f": {
 "zh": "Modal CEO 谈推理未来、GPU 市场乱局与沙箱赌注的起源",
 "desc": "红点创投的 Jacob Effron 与 Modal CEO 埃里克·伯恩哈德松聊推理市场、GPU 价格乱局，以及沙箱基础设施的早期押注。"
+},
+"4248d1df-1156-4e68-b67a-5f3cfd063aea": {
+"zh": "Nebius CTO 谈 AI 云突围：超大规模厂商未赢，开放模型推理远未优化",
+"desc": "Nebius CTO Danila Shtan 与 Jacob Effron 聊前沿 AI 云的运营门槛，以及他为何认为超大规模厂商尚未赢下这一市场。"
 }
 }

@@ -9,6 +9,18 @@
  },
  "episodes": [
   {
+   "id": "4248d1df-1156-4e68-b67a-5f3cfd063aea",
+   "title": "Ep 96: Nebius CTO on Racing the Hyperscalers Before AWS Wakes Up",
+   "date": "2026-11-02",
+   "duration": 3668,
+   "description": "Nebius CTO Danila Shtan joins Jacob Effron to talk about what it takes to run an AI cloud at the frontier, and why he thinks the hyperscalers haven’t won this market yet.\n\nToday Nebius is a Nasdaq-listed AI cloud with infrastructure deals with Microsoft and Meta.\n\nDanila and Jacob discuss why open-model inference is still far from optimized, why 95% of Nebius customers run modified models instead of vanilla ones, and why prefill/decode disaggregation is more talk than practice. They also cover what’s actually constraining the AI buildout, why chip scarcity has kept AWS and Google from winning AI cloud, whether we’re overbuilding infrastructure, and how Nebius runs a large engineering org with no limits on AI token usage.\n\n \n\n(0:00) Intro\n(1:25) What Differentiates AI Clouds\n(6:16) Nebius’ Origin Story\n(10:15) Bringing New Nvidia Chips Online\n(14:55) What Different Customers Want\n(19:58) Latency vs. Cost\n(21:53) Disaggregated Prefill & Decode\n(24:59) Inference’s Low-Hanging Fruit\n(28:31) What Nebius Should Productize\n(30:11) The Tavily Acquisition\n(31:56) How Data Centers Differ\n(34:29) Bottlenecks in the AI Buildout\n(37:03) How New Workloads Shape Clusters\n(39:17) Why Hyperscalers Didn’t Win This Market\n(43:39) The Future of Neoclouds\n(45:42) What Gets Absorbed by AI Hyperscalers\n(49:43) OpenAI x Baseten\n(52:07) Quickfire\n\n \n\nJacob is an AI investor at Redpoint Ventures. He's led Redpoint's investments in companies like Abridge, Physical Intelligence & Legora. Follow Jacob on Twitter (@jacobeffron).\n\nOn Unsupervised Learning we probe the sharpest minds in AI in search for the truth about what's real today, what will be real in the future and what it all means for businesses and the world. If you're a builder, researcher or investor navigating the AI world, this podcast will help you deconstruct and understand the most important breakthroughs and see a clearer picture of reality. Subscribe to this show to stay up to date on our latest episodes.",
+   "audio": "https://cdn.simplecast.com/media/audio/transcoded/b3414ac6-61c8-4752-8722-491e1457c3bf/2c08ad29-5b79-42c0-a40a-6c1af4327f2f/episodes/audio/group/371ec88d-3714-4671-9e0c-18704b709862/group-item/13aeade9-6b9f-4d95-b20e-a6f4c76d915b/128_default_tc.mp3?aid=rss_feed&feed=dOSE_bdP",
+   "link": "https://unsupervised-learning.simplecast.com/episodes/ep-96-nebius-cto-on-racing-the-hyperscalers-before-aws-wakes-up-AZ_eCjjr",
+   "image": "",
+   "epnum": 96,
+   "ytId": null
+  },
+  {
    "id": "899611ab-5215-4e00-b177-4be18b8bdb5f",
    "title": "Ep 95: Modal CEO on the Future of Inference, the Chaos of the GPU Market & Origins of the Sandbox Bet",
    "date": "2026-10-28",
