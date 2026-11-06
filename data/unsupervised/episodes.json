@@ -9,6 +9,18 @@
  },
  "episodes": [
   {
+   "id": "9e93ce06-533a-4c12-aecb-7c10e60bb02a",
+   "title": "Ep 97: Jev Creator on Decision Models, Benchmark Fatigue & Why the Labs Missed It",
+   "date": "2026-11-05",
+   "duration": 3664,
+   "description": "Jev creator and TypeSafe AI co-founder, Diogo Almeida, joins Jacob Effron to talk about why AI still isn't automating the easy work it's been smart enough to do for years, and why he built a new class of model around reliability.\n\nDiogo coauthored OpenAI's InstructGPT paper and spent two years in stealth building Jev, a \"system one\" model that returns structured decisions instead of text, which launched in September.\n\nDiogo and Jacob discuss what the viral launch was really like, why he thought Jev would take a week and it took years, why almost every LLM call should be meant for a machine, and why developers should push model providers harder on jaggedness. They also cover the tyranny of the KV cache in coding agents, why new model shapes are cheap and reliability is the hard part, his estimate that coding agents deliver a 20 to 40% speedup, why he sees financial engineering as the labs' underrated strength, and why he thinks we're two gigantic breakthroughs from true AI agency.\n\n \n\n(0:00) Intro\n(1:14) The Early Bet on RLCD\n(4:40) Built for Humans vs Computers\n(6:39) Roadmap & Model Limitations\n(11:04) Mental Models of Models\n(16:07) Do LLMs Have a Place in 10 Years?\n(17:32) New Model Shapes\n(21:24) Problems Still Unsolved\n(27:00) The Tyranny of the KV Cache\n(31:21) Rethinking Coding Agents\n(34:40) Multimodality\n(37:52) Images, Games & Computer Use\n(39:36) Could This Have Been Built 5 Years Ago?\n(42:01) Benchmarks & Copycat Releases\n(44:12) Fundraising\n(45:27) Quickfire\n \n\nOpenAI's InstructGPT paper: https://arxiv.org/abs/2203.02155\n\n \n\nJacob is an AI investor at Redpoint Ventures. He's led Redpoint's investments in companies like Abridge, Physical Intelligence & Legora. Follow Jacob on Twitter (@jacobeffron).\n\nOn Unsupervised Learning we probe the sharpest minds in AI in search for the truth about what's real today, what will be real in the future and what it all means for businesses and the world. If you're a builder, researcher or investor navigating the AI world, this podcast will help you deconstruct and understand the most important breakthroughs and see a clearer picture of reality. Subscribe to this show to stay up to date on our latest episodes.",
+   "audio": "https://cdn.simplecast.com/media/audio/transcoded/b3414ac6-61c8-4752-8722-491e1457c3bf/2c08ad29-5b79-42c0-a40a-6c1af4327f2f/episodes/audio/group/93743bd3-ff62-4563-a344-b69689785650/group-item/90508aaa-3f68-4771-8de2-d2369b08ee7e/128_default_tc.mp3?aid=rss_feed&feed=dOSE_bdP",
+   "link": "https://unsupervised-learning.simplecast.com/episodes/ep-97-jev-creator-on-decision-models-benchmark-fatigue-why-the-labs-missed-it-lw9nHzNX",
+   "image": "",
+   "epnum": 97,
+   "ytId": null
+  },
+  {
    "id": "4248d1df-1156-4e68-b67a-5f3cfd063aea",
    "title": "Ep 96: Nebius CTO on Racing the Hyperscalers Before AWS Wakes Up",
    "date": "2026-11-02",

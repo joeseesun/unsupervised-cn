@@ -418,5 +418,9 @@
 "4248d1df-1156-4e68-b67a-5f3cfd063aea": {
 "zh": "Nebius CTO 谈 AI 云突围：超大规模厂商未赢，开放模型推理远未优化",
 "desc": "Nebius CTO Danila Shtan 与 Jacob Effron 聊前沿 AI 云的运营门槛，以及他为何认为超大规模厂商尚未赢下这一市场。"
+},
+"9e93ce06-533a-4c12-aecb-7c10e60bb02a": {
+"zh": "Jev创始人Diogo Almeida：决策模型、基准疲劳与大实验室错失",
+"desc": "Jev 创始人 Diogo Almeida 与 Jacob Effron 谈 AI 为何仍难落地简单任务，构建决策模型。"
 }
 }
