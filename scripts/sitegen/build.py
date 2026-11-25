@@ -449,7 +449,7 @@ def build_index(cfg, eps, out):
     hours = round(sum(e['dur'] for e in eps) / 3600)
     latest = next((e for e in eps if e['zh_body']), None)
     data = [{'n': e['seq'], 't': e['title'], 's': e['file'], 'u': e['url'], 'd': e['date'], 'y': e['yt'],
-             'zh': e['zh_t'] or None, 'tr': 'tr' if e['tr'] else None, 'au': bool(e['audio']),
+             'zh': e['zh_t'] or None, 'tr': 'tr' if e['tr'] else None, 'au': bool(e['audio']), 'a': e['audio'] or None,
              'r': 1 if e['zh_body'] else 0, 'ds': e['zh_desc'] or e['desc'][:200], 'du': e['dur'],
              'rm': zh_stats(e['zh_body'])[1] if e['zh_body'] else 0,
              'c': '' if e['yt'] else thumb_url(e)} for e in eps]
